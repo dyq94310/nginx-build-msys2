@@ -65,7 +65,6 @@ echo "${OPENSSL}"
 # fi
 
 # git checkout -b patch
-# git clone 
 cd nginx
 
 # Since 1.23.4 utf16 encoded pathes are supported natively upstream
@@ -79,7 +78,7 @@ if [ "$(grep 'ngx_utf16_to_utf8' src/os/win32/ngx_files.c | wc -l)" -ge 2 ]; the
 fi
 
 # apply remaining patches
-git am -3 ../nginx-*.patch
+# git am -3 ../nginx-*.patch
 
 set -e
 
@@ -180,7 +179,7 @@ version="$(cat src/core/nginx.h | grep NGINX_VERSION | grep -ioP '((\d+\.)+\d+)'
 cp "objs/nginx.exe" "../nginx-${version}-${machine_str}.exe"
 
 # add model
-patch -p1 < ../ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_102101.patch
+# patch -p1 < ../ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_102101.patch
 
 configure_args+=(
     --add-module=../ngx_http_proxy_connect_module
@@ -202,6 +201,6 @@ cp -f "objs/nginx.exe" "../nginx-${version}-deng.exe"
 #mv -f "objs/nginx.exe" "../nginx-${version}-${machine_str}-debug.exe"
 
 # clean up
-git checkout master
-git branch patch -D
+#git checkout master
+#git branch patch -D
 cd ..
