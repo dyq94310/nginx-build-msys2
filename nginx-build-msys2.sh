@@ -153,10 +153,10 @@ auto/configure "${configure_args[@]}" \
     --with-cc-opt='-DFD_SETSIZE=1024 -s -O2 -fno-strict-aliasing -pipe'
 
 # build
-make "-j$(nproc)"
-strip -s objs/nginx.exe
-version="$(cat src/core/nginx.h | grep NGINX_VERSION | grep -ioP '((\d+\.)+\d+)')"
-mv -f "objs/nginx.exe" "../nginx-slim-${version}-${machine_str}.exe"
+# make "-j$(nproc)"
+# strip -s objs/nginx.exe
+# version="$(cat src/core/nginx.h | grep NGINX_VERSION | grep -ioP '((\d+\.)+\d+)')"
+# mv -f "objs/nginx.exe" "../nginx-slim-${version}-${machine_str}.exe"
 
 # re-configure with ssl
 configure_args+=(
@@ -175,17 +175,29 @@ auto/configure "${configure_args[@]}" \
 make "-j$(nproc)"
 strip -s objs/nginx.exe
 version="$(cat src/core/nginx.h | grep NGINX_VERSION | grep -ioP '((\d+\.)+\d+)')"
-mv -f "objs/nginx.exe" "../nginx-${version}-${machine_str}.exe"
+cp "objs/nginx.exe" "../nginx-${version}-${machine_str}.exe"
+
+# add model
+patch -p1 < ../ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_102101.patch
+
+configure_args+=(
+    --add-module=../ngx_http_proxy_connect_module
+)
+make "-j$(nproc)"
+strip -s objs/nginx.exe
+version="$(cat src/core/nginx.h | grep NGINX_VERSION | grep -ioP '((\d+\.)+\d+)')"
+cp -f "objs/nginx.exe" "../nginx-${version}-deng.exe"
+
 
 # re-configure with debugging log
-configure_args+=(--with-debug)
-auto/configure "${configure_args[@]}"  \
-    --with-cc-opt='-DFD_SETSIZE=1024 -O2 -fno-strict-aliasing -pipe' \
-    --with-openssl-opt='no-tests -D_WIN32_WINNT=0x0501'
+# configure_args+=(--with-debug)
+# auto/configure "${configure_args[@]}"  \
+#     --with-cc-opt='-DFD_SETSIZE=1024 -O2 -fno-strict-aliasing -pipe' \
+#     --with-openssl-opt='no-tests -D_WIN32_WINNT=0x0501'
 
 # re-build with debugging log
-make "-j$(nproc)"
-mv -f "objs/nginx.exe" "../nginx-${version}-${machine_str}-debug.exe"
+#make "-j$(nproc)"
+#mv -f "objs/nginx.exe" "../nginx-${version}-${machine_str}-debug.exe"
 
 # clean up
 git checkout master
