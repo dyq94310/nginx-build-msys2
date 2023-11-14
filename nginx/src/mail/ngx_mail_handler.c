@@ -283,10 +283,10 @@ ngx_mail_init_session_handler(ngx_event_t *rev)
 
     s = c->data;
 
-    if (s->ssl) {
-        c->log->action = "SSL handshaking";
+    sslcf = ngx_mail_get_module_srv_conf(s, ngx_mail_ssl_module);
 
-        sslcf = ngx_mail_get_module_srv_conf(s, ngx_mail_ssl_module);
+    if (sslcf->enable || s->ssl) {
+        c->log->action = "SSL handshaking";
 
         ngx_mail_ssl_init_connection(&sslcf->ssl, c);
         return;

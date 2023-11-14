@@ -14,8 +14,6 @@
 
 
 #define NGX_WRITE_SHUTDOWN SD_SEND
-#define NGX_READ_SHUTDOWN  SD_RECEIVE
-#define NGX_RDWR_SHUTDOWN  SD_BOTH
 
 
 typedef SOCKET  ngx_socket_t;

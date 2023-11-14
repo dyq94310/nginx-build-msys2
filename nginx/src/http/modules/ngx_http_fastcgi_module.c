@@ -2048,10 +2048,7 @@ ngx_http_fastcgi_process_header(ngx_http_request_t *r)
                     }
 
                     u->headers_in.status_n = status;
-
-                    if (status_line->len > 3) {
-                        u->headers_in.status_line = *status_line;
-                    }
+                    u->headers_in.status_line = *status_line;
 
                 } else if (u->headers_in.location) {
                     u->headers_in.status_n = 302;
