@@ -143,6 +143,7 @@ configure_args=(
     --with-pcre-jit \
     "--with-zlib=${ZLIB}" \
     --with-ld-opt="-Wl,--gc-sections,--build-id=none" \
+    --add-module=../ngx_http_proxy_connect_module \
     --prefix=
 )
 
