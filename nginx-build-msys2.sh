@@ -105,17 +105,17 @@ if [ "${OPENSSL}" = "openssl-1.1.1d" ]; then
    sed -i 's/return return 0;/return 0;/' openssl-1.1.1d/crypto/threads_none.c
 fi
 
-# make changes
-# make -f docs/GNUmakefile changes
-# mv -f tmp/*/CHANGES* ../docs/
-# 
-# # copy docs and licenses
-# cp -f docs/text/LICENSE ../docs/
-# cp -f docs/text/README ../docs/
-# cp -pf "${OPENSSL}/LICENSE" '../docs/OpenSSL.LICENSE'
-# cp -pf "${WITH_PCRE}/LICENCE" '../docs/PCRE.LICENCE'
-# sed -ne '/^ (C) 1995-20/,/^  jloup@gzip\.org/p' "${ZLIB}/README" > '../docs/zlib.LICENSE'
-# touch -r "${ZLIB}/README" '../docs/zlib.LICENSE'
+make changes
+make -f docs/GNUmakefile changes
+mv -f tmp/*/CHANGES* ../docs/
+
+# copy docs and licenses
+cp -f docs/text/LICENSE ../docs/
+cp -f docs/text/README ../docs/
+cp -pf "${OPENSSL}/LICENSE" '../docs/OpenSSL.LICENSE'
+cp -pf "${WITH_PCRE}/LICENCE" '../docs/PCRE.LICENCE'
+sed -ne '/^ (C) 1995-20/,/^  jloup@gzip\.org/p' "${ZLIB}/README" > '../docs/zlib.LICENSE'
+touch -r "${ZLIB}/README" '../docs/zlib.LICENSE'
 
 # configure
 configure_args=(
