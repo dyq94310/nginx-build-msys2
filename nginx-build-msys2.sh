@@ -42,29 +42,31 @@ OPENSSL="${OPENSSL:-openssl-1.1.1t}"
 echo "${OPENSSL}"
 
 # clone and patch nginx
-if [[ -d nginx ]]; then
-    cd nginx || exit 1
-    git checkout master
-    git branch patch -D
-    if [[ "${NGINX_TAG}" == "" ]]; then
-        git reset --hard origin || git reset --hard
-        git pull
-    else
-        git reset --hard "${NGINX_TAG}" || git reset --hard
-    fi
-else
-    if [[ "${NGINX_TAG}" == "" ]]; then
-        git clone https://github.com/nginx/nginx.git --depth=1
-        cd nginx || exit 1
-    else
-        git clone https://github.com/nginx/nginx.git --depth=1 --branch "${NGINX_TAG}"
-        cd nginx || exit 1
-        # You are in 'detached HEAD' state.
-        git checkout -b master
-    fi
-fi
+# if [[ -d nginx ]]; then
+#     cd nginx || exit 1
+#     git checkout master
+#     git branch patch -D
+#     if [[ "${NGINX_TAG}" == "" ]]; then
+#         git reset --hard origin || git reset --hard
+#         git pull
+#     else
+#         git reset --hard "${NGINX_TAG}" || git reset --hard
+#     fi
+# else
+#     if [[ "${NGINX_TAG}" == "" ]]; then
+#         git clone https://github.com/nginx/nginx.git --depth=1
+#         cd nginx || exit 1
+#     else
+#         git clone https://github.com/nginx/nginx.git --depth=1 --branch "${NGINX_TAG}"
+#         cd nginx || exit 1
+#         # You are in 'detached HEAD' state.
+#         git checkout -b master
+#     fi
+# fi
 
-git checkout -b patch
+# git checkout -b patch
+# git clone 
+cd nginx
 
 # Since 1.23.4 utf16 encoded pathes are supported natively upstream
 # detect function ngx_utf16_to_utf8 introduced since nginx 1.23.4

@@ -6,7 +6,7 @@
 *.tar
 
 # Source folders
-nginx/*
+# nginx/*
 openssl-*/*
 libressl-*/*
 pcre-*/*
