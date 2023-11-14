@@ -105,7 +105,7 @@ if [ "${OPENSSL}" = "openssl-1.1.1d" ]; then
    sed -i 's/return return 0;/return 0;/' openssl-1.1.1d/crypto/threads_none.c
 fi
 
-make changes
+# make changes
 make -f docs/GNUmakefile changes
 mv -f tmp/*/CHANGES* ../docs/
 
