@@ -7,16 +7,16 @@
 
 # Source folders
 # nginx/*
-openssl-*/*
-libressl-*/*
-pcre-*/*
-zlib-*/*
-conf/*
-contrib/*
-docs/*
-html/*
-logs/*
-temp/*
+# openssl-*/*
+# libressl-*/*
+# pcre-*/*
+# zlib-*/*
+# conf/*
+# contrib/*
+# docs/*
+# html/*
+# logs/*
+# temp/*
 
 # Prerequisites
 *.d

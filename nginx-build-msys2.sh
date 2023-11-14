@@ -12,7 +12,7 @@ do
 done
 
 # create dir for docs
-mkdir -p docs
+# mkdir -p docs
 
 # init
 machine_str="$(gcc -dumpmachine | cut -d'-' -f1)"
@@ -106,16 +106,16 @@ if [ "${OPENSSL}" = "openssl-1.1.1d" ]; then
 fi
 
 # make changes
-make -f docs/GNUmakefile changes
-mv -f tmp/*/CHANGES* ../docs/
-
-# copy docs and licenses
-cp -f docs/text/LICENSE ../docs/
-cp -f docs/text/README ../docs/
-cp -pf "${OPENSSL}/LICENSE" '../docs/OpenSSL.LICENSE'
-cp -pf "${WITH_PCRE}/LICENCE" '../docs/PCRE.LICENCE'
-sed -ne '/^ (C) 1995-20/,/^  jloup@gzip\.org/p' "${ZLIB}/README" > '../docs/zlib.LICENSE'
-touch -r "${ZLIB}/README" '../docs/zlib.LICENSE'
+# make -f docs/GNUmakefile changes
+# mv -f tmp/*/CHANGES* ../docs/
+# 
+# # copy docs and licenses
+# cp -f docs/text/LICENSE ../docs/
+# cp -f docs/text/README ../docs/
+# cp -pf "${OPENSSL}/LICENSE" '../docs/OpenSSL.LICENSE'
+# cp -pf "${WITH_PCRE}/LICENCE" '../docs/PCRE.LICENCE'
+# sed -ne '/^ (C) 1995-20/,/^  jloup@gzip\.org/p' "${ZLIB}/README" > '../docs/zlib.LICENSE'
+# touch -r "${ZLIB}/README" '../docs/zlib.LICENSE'
 
 # configure
 configure_args=(
