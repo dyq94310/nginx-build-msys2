@@ -12,7 +12,7 @@ do
 done
 
 # create dir for docs
-# mkdir -p docs
+mkdir -p docs
 
 # init
 machine_str="$(gcc -dumpmachine | cut -d'-' -f1)"
@@ -77,8 +77,8 @@ if [ "$(grep 'ngx_utf16_to_utf8' src/os/win32/ngx_files.c | wc -l)" -ge 2 ]; the
     rm -f ../nginx-0006-ngx_files-implement-ngx_win32_rename_file-in-utf8-en.patch
 fi
 
-# apply remaining patches
-# git am -3 ../nginx-*.patch
+apply remaining patches
+git am -3 ../nginx-*.patch
 
 set -e
 
