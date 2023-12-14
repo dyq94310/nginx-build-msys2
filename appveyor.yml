@@ -15,4 +15,5 @@ deploy:
 - provider: Environment
   name: github
   on:
+    branch: release-1.24.0
     appveyor_repo_tag: true

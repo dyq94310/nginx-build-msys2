@@ -41,44 +41,37 @@ OPENSSL="$(curl -s 'https://www.openssl.org/source/' | grep -ioP 'openssl-1\.(\d
 OPENSSL="${OPENSSL:-openssl-1.1.1t}"
 echo "${OPENSSL}"
 
-# clone and patch nginx
-# if [[ -d nginx ]]; then
-#     cd nginx || exit 1
-#     git checkout master
-#     git branch patch -D
-#     if [[ "${NGINX_TAG}" == "" ]]; then
-#         git reset --hard origin || git reset --hard
-#         git pull
-#     else
-#         git reset --hard "${NGINX_TAG}" || git reset --hard
-#     fi
-# else
-#     if [[ "${NGINX_TAG}" == "" ]]; then
-#         git clone https://github.com/nginx/nginx.git --depth=1
-#         cd nginx || exit 1
-#     else
-#         git clone https://github.com/nginx/nginx.git --depth=1 --branch "${NGINX_TAG}"
-#         cd nginx || exit 1
-#         # You are in 'detached HEAD' state.
-#         git checkout -b master
-#     fi
-# fi
+#clone and patch nginx
+if [[ -d nginx ]]; then
+    cd nginx || exit 1
+    git checkout master
+    git branch patch -D
+    if [[ "${NGINX_TAG}" == "" ]]; then
+        git reset --hard origin || git reset --hard
+        git pull
+    else
+        git reset --hard "${NGINX_TAG}" || git reset --hard
+    fi
+else
+    if [[ "${NGINX_TAG}" == "" ]]; then
+        git clone https://github.com/nginx/nginx.git --depth=1
+        cd nginx || exit 1
+    else
+        git clone https://github.com/nginx/nginx.git --depth=1 --branch "${NGINX_TAG}"
+        cd nginx || exit 1
+        # You are in 'detached HEAD' state.
+        git checkout -b master
+    fi
+fi
+
+# clone module
+git clone https://github.com/chobits/ngx_http_proxy_connect_module.git --depth=1
 
 # git checkout -b patch
 cd nginx
 
-# Since 1.23.4 utf16 encoded pathes are supported natively upstream
-# detect function ngx_utf16_to_utf8 introduced since nginx 1.23.4
-if [ "$(grep 'ngx_utf16_to_utf8' src/os/win32/ngx_files.c | wc -l)" -ge 2 ]; then
-    rm -f ../nginx-0002-win32-force-utf-8-encoding-in-ngx_dir_t.patch
-    rm -f ../nginx-0003-ngx_files-implement-some-functions-in-utf8-encoding.patch
-    rm -f ../nginx-0004-ngx_files-implement-ngx_open_tempfile-in-utf8-encodi.patch
-    rm -f ../nginx-0005-ngx_files-implement-ngx_open_glob-and-ngx_read_glob-.patch
-    rm -f ../nginx-0006-ngx_files-implement-ngx_win32_rename_file-in-utf8-en.patch
-fi
 
-# apply remaining patches
-# git am -3 ../nginx-*.patch
+# patch proxy_connect_rewrite_102101.patch to ng release-1.24.0
 
 set -e
 
@@ -144,7 +137,6 @@ configure_args=(
     --with-pcre-jit \
     "--with-zlib=${ZLIB}" \
     --with-ld-opt="-Wl,--gc-sections,--build-id=none" \
-    --add-module=../ngx_http_proxy_connect_module \
     --prefix=
 )
 
@@ -152,12 +144,6 @@ configure_args=(
 echo "${configure_args[@]}"
 auto/configure "${configure_args[@]}" \
     --with-cc-opt='-DFD_SETSIZE=1024 -s -O2 -fno-strict-aliasing -pipe'
-
-# build
-# make "-j$(nproc)"
-# strip -s objs/nginx.exe
-# version="$(cat src/core/nginx.h | grep NGINX_VERSION | grep -ioP '((\d+\.)+\d+)')"
-# mv -f "objs/nginx.exe" "../nginx-slim-${version}-${machine_str}.exe"
 
 # re-configure with ssl
 configure_args+=(
@@ -172,14 +158,15 @@ auto/configure "${configure_args[@]}" \
     --with-cc-opt='-DFD_SETSIZE=1024 -s -O2 -fno-strict-aliasing -pipe' \
     --with-openssl-opt='no-tests -D_WIN32_WINNT=0x0501'
 
-# build
+# build Standard
 make "-j$(nproc)"
 strip -s objs/nginx.exe
 version="$(cat src/core/nginx.h | grep NGINX_VERSION | grep -ioP '((\d+\.)+\d+)')"
-cp "objs/nginx.exe" "../nginx-${version}-${machine_str}.exe"
+mv -f "objs/nginx.exe" "../nginx-${version}-${machine_str}.exe"
 
-# add model
-# patch -p1 < ../ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_102101.patch
+# build with model
+# patch model
+git am -3 ../*.patch
 
 configure_args+=(
     --add-module=../ngx_http_proxy_connect_module
@@ -187,20 +174,10 @@ configure_args+=(
 make "-j$(nproc)"
 strip -s objs/nginx.exe
 version="$(cat src/core/nginx.h | grep NGINX_VERSION | grep -ioP '((\d+\.)+\d+)')"
-cp -f "objs/nginx.exe" "../nginx-${version}-deng.exe"
-
-
-# re-configure with debugging log
-# configure_args+=(--with-debug)
-# auto/configure "${configure_args[@]}"  \
-#     --with-cc-opt='-DFD_SETSIZE=1024 -O2 -fno-strict-aliasing -pipe' \
-#     --with-openssl-opt='no-tests -D_WIN32_WINNT=0x0501'
-
-# re-build with debugging log
-#make "-j$(nproc)"
-#mv -f "objs/nginx.exe" "../nginx-${version}-${machine_str}-debug.exe"
+cp -f "objs/nginx.exe" "../nginx-${version}-ngx_http_proxy_connect_module.exe"
+mv -f "objs/nginx.exe" "../nginx-${version}-${machine_str}-ngx_http_proxy_connect_module.exe"
 
 # clean up
-#git checkout master
-#git branch patch -D
+git checkout master
+git branch patch -D
 cd ..
