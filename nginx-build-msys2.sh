@@ -42,28 +42,15 @@ OPENSSL="${OPENSSL:-openssl-1.1.1t}"
 echo "${OPENSSL}"
 
 #clone and patch nginx
-if [[ -d nginx ]]; then
+if [[ "${NGINX_TAG}" == "" ]]; then
+    git clone https://github.com/nginx/nginx.git --depth=1
     cd nginx || exit 1
-    git checkout master
-    git branch patch -D
-    if [[ "${NGINX_TAG}" == "" ]]; then
-        git reset --hard origin || git reset --hard
-        git pull
-    else
-        git reset --hard "${NGINX_TAG}" || git reset --hard
-    fi
 else
-    if [[ "${NGINX_TAG}" == "" ]]; then
-        git clone https://github.com/nginx/nginx.git --depth=1
-        cd nginx || exit 1
-    else
-        git clone https://github.com/nginx/nginx.git --depth=1 --branch "${NGINX_TAG}"
-        cd nginx || exit 1
-        # You are in 'detached HEAD' state.
-        git checkout -b master
-    fi
+    git clone https://github.com/nginx/nginx.git --depth=1 --branch "${NGINX_TAG}"
+    cd nginx || exit 1
 fi
 
+cd ..
 # clone module
 git clone https://github.com/chobits/ngx_http_proxy_connect_module.git --depth=1
 
@@ -157,12 +144,6 @@ echo "${configure_args[@]}"
 auto/configure "${configure_args[@]}" \
     --with-cc-opt='-DFD_SETSIZE=1024 -s -O2 -fno-strict-aliasing -pipe' \
     --with-openssl-opt='no-tests -D_WIN32_WINNT=0x0501'
-
-# build Standard
-# make "-j$(nproc)"
-# strip -s objs/nginx.exe
-# version="$(cat src/core/nginx.h | grep NGINX_VERSION | grep -ioP '((\d+\.)+\d+)')"
-# mv -f "objs/nginx.exe" "../nginx-${version}-${machine_str}.exe"
 
 # build with model
 # patch model
