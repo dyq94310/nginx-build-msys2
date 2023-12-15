@@ -54,7 +54,7 @@ else
 fi
 
 # patch proxy_connect_rewrite_102101.patch to ng release-1.24.0
-git am -3 ../nginx-*.patch
+git am -3 ../0*.patch
 
 
 set -e
