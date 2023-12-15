@@ -147,8 +147,8 @@ auto/configure "${configure_args[@]}" \
 
 # build with model
 # patch model
-git format-patch -3 ../proxy_connect_rewrite_102101.patch --output-directory ../
-git am -3 ../000*.patch
+# git format-patch -3 ../proxy_connect_rewrite_102101.patch --output-directory ../
+git am -3 ../0000*.patch
 
 configure_args+=(
     --add-module=../ngx_http_proxy_connect_module
