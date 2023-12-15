@@ -9,9 +9,8 @@ nginx build scripts on msys2 mingw with dependencies and custom patches
 ## Features
 
 * native x86-64 (x64, amd64) build for windows.
-* 
+* add model [ngx_http_proxy_connect_module](https://github.com/chobits/ngx_http_proxy_connect_module) build
 
 ## [Releases](https://github.com/myfreeer/nginx-build-msys2/releases)
 
-* `nginx-*-x86_64.exe`: 64-bit nginx
-* `nginx-*-x86_64-debug.exe`: 64-bit nginx with debugging log and symbols
+* `nginx-*-ngx_http_proxy_connect_module.exe`: 64-bit nginx

@@ -140,7 +140,7 @@ configure_args+=(
     --with-mail_ssl_module \
     --with-stream_ssl_module
 )
-git am -3 ../nginx-*.patchngx_http_proxy_connect_module
+git am -3 ../nginx-*.patch
 
 # add-module ngx_http_proxy_connect_module
 configure_args+=(
