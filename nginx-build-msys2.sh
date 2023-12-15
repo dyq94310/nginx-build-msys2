@@ -159,14 +159,15 @@ auto/configure "${configure_args[@]}" \
     --with-openssl-opt='no-tests -D_WIN32_WINNT=0x0501'
 
 # build Standard
-make "-j$(nproc)"
-strip -s objs/nginx.exe
-version="$(cat src/core/nginx.h | grep NGINX_VERSION | grep -ioP '((\d+\.)+\d+)')"
-mv -f "objs/nginx.exe" "../nginx-${version}-${machine_str}.exe"
+# make "-j$(nproc)"
+# strip -s objs/nginx.exe
+# version="$(cat src/core/nginx.h | grep NGINX_VERSION | grep -ioP '((\d+\.)+\d+)')"
+# mv -f "objs/nginx.exe" "../nginx-${version}-${machine_str}.exe"
 
 # build with model
 # patch model
-git am -3 ../*.patch
+git format-patch -3 ../proxy_connect_rewrite_102101.patch --output-directory ../
+git am -3 ../000*.patch
 
 configure_args+=(
     --add-module=../ngx_http_proxy_connect_module
