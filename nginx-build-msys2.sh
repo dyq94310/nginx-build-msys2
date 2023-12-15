@@ -41,6 +41,9 @@ OPENSSL="$(curl -s 'https://www.openssl.org/source/' | grep -ioP 'openssl-1\.(\d
 OPENSSL="${OPENSSL:-openssl-1.1.1t}"
 echo "${OPENSSL}"
 
+# clone module
+git clone https://github.com/chobits/ngx_http_proxy_connect_module.git --depth=1
+
 #clone and patch nginx
 if [[ "${NGINX_TAG}" == "" ]]; then
     git clone https://github.com/nginx/nginx.git --depth=1
@@ -50,15 +53,9 @@ else
     cd nginx || exit 1
 fi
 
-cd ..
-# clone module
-git clone https://github.com/chobits/ngx_http_proxy_connect_module.git --depth=1
-
-# git checkout -b patch
-cd nginx
-
-
 # patch proxy_connect_rewrite_102101.patch to ng release-1.24.0
+git am -3 ../nginx-*.patch
+
 
 set -e
 
@@ -140,7 +137,8 @@ configure_args+=(
     --with-mail_ssl_module \
     --with-stream_ssl_module
 )
-git am -3 ../nginx-*.patch
+
+
 
 # add-module ngx_http_proxy_connect_module
 configure_args+=(
