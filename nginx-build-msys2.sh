@@ -140,23 +140,21 @@ configure_args+=(
     --with-mail_ssl_module \
     --with-stream_ssl_module
 )
+git am -3 ../nginx-*.patchngx_http_proxy_connect_module
+
+# add-module ngx_http_proxy_connect_module
+configure_args+=(
+    --add-module=../ngx_http_proxy_connect_module
+)
 echo "${configure_args[@]}"
+
 auto/configure "${configure_args[@]}" \
     --with-cc-opt='-DFD_SETSIZE=1024 -s -O2 -fno-strict-aliasing -pipe' \
     --with-openssl-opt='no-tests -D_WIN32_WINNT=0x0501'
 
-# build with model
-# patch model
-# git format-patch -3 ../proxy_connect_rewrite_102101.patch --output-directory ../
-git am -3 ../nginx-*.patch
-
-configure_args+=(
-    --add-module=../ngx_http_proxy_connect_module
-)
 make "-j$(nproc)"
 strip -s objs/nginx.exe
 version="$(cat src/core/nginx.h | grep NGINX_VERSION | grep -ioP '((\d+\.)+\d+)')"
-cp -f "objs/nginx.exe" "../nginx-${version}-ngx_http_proxy_connect_module.exe"
 mv -f "objs/nginx.exe" "../nginx-${version}-${machine_str}-ngx_http_proxy_connect_module.exe"
 
 # clean up
