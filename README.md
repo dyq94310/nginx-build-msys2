@@ -13,4 +13,5 @@ nginx build scripts on msys2 mingw with dependencies and ngx_http_proxy_connect_
 
 ## [Releases](https://github.com/myfreeer/nginx-build-msys2/releases)
 
-* `nginx-*-ngx_http_proxy_connect_module.exe`: 64-bit nginx
+* `nginx-*-i686-_http_proxy_connect_module`: 32-bit nginx
+* `nginx-*-x86_64-_http_proxy_connect_module`: 32-bit nginx
