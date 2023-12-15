@@ -1,6 +1,6 @@
 # nginx-build-msys2
 
-nginx build scripts on msys2 mingw with dependencies and custom patches
+nginx build scripts on msys2 mingw with dependencies and ngx_http_proxy_connect_module patches
 
 ## Badges
 
